@@ -11,6 +11,7 @@
       <path value="$PROJECT_DIR$/vendor/coffeecode/paginator" />
       <path value="$PROJECT_DIR$/vendor/coffeecode/optimizer" />
       <path value="$PROJECT_DIR$/vendor/coffeecode/uploader" />
+      <path value="$PROJECT_DIR$/vendor/coffeecode/router" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4">

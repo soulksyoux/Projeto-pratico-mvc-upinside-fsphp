@@ -7,7 +7,6 @@ use Source\Support\Message;
 /**
  * FSPHP | Class Model Layer Supertype Pattern
  *
- * @author Robson V. Leite <cursos@upinside.com.br>
  * @package Source\Models
  */
 abstract class Model

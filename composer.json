@@ -5,8 +5,8 @@
   "authors": [
     {
       "name": "Andre",
-      "email": "",
-      "homepage": "",
+      "email": "agp@gmail.com",
+      "homepage": "https://agp32234324333.com",
       "role": "Developer"
     }
   ],
@@ -30,6 +30,7 @@
     "coffeecode/uploader": "^1.0",
     "coffeecode/cropper": "^1.0",
     "coffeecode/optimizer": "^1.0",
-    "coffeecode/paginator": "^1.0"
+    "coffeecode/paginator": "^1.0",
+    "coffeecode/router": "1.0.*"
   }
 }
