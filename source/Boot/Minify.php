@@ -37,5 +37,5 @@ if(strpos(url(), "localhost") !== false){
     }
 
     //Minify JS
-    $minJS->minify(__DIR__ . "/../../themes/" . CONF_VIEW_THEME . "/assets/script.js");
+    $minJS->minify(__DIR__ . "/../../themes/" . CONF_VIEW_THEME . "/assets/scripts.js");
 }

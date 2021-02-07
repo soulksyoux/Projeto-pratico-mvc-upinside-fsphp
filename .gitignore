@@ -1,4 +1,4 @@
 vendor
-source/Support/Config.php
+source/Boot/Config.php
 storage
 themes/cafecontrolback

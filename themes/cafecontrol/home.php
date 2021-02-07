@@ -106,6 +106,7 @@
     </div>
 </article>
 
+
 <!--BLOG-->
 <section class="blog">
     <div class="blog_content container content">

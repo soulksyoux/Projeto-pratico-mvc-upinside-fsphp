@@ -23,6 +23,9 @@ $(function () {
         $("html, body").animate({scrollTop: goto}, goto / 2, "easeOutBounce");
     });
 
+
+
+
     // modal open
     $("[data-modal]").click(function (e) {
         e.preventDefault();
@@ -42,6 +45,7 @@ $(function () {
             iframe.attr("src", iframe.attr("src"));
         }
     });
+
 
     // collpase
     $(".j_collapse").click(function (e) {

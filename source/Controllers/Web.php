@@ -23,8 +23,16 @@ class Web extends Controller {
      * SITE HOME
      */
     public function home(): void {
+        $head = $this->seo->render(
+            CONF_SITE_NAME . " - " . CONF_SITE_TITLE,
+            CONF_SITE_DESC,
+            url(),
+            theme("/assets/images/share.jpg")
+        );
+
         echo $this->view->render("home", [
-           "title" => "CafeControl - Faça a gestão de suas contas com o melhor café!"
+            "head" => $head,
+            "video" => "lDZGl9Wdc7Y"
         ]);
     }
 
@@ -40,8 +48,24 @@ class Web extends Controller {
      * @param array $data
      */
     public function error(array $data): void {
+        $error = new \stdClass();
+        $error->code = $data['errcode'];
+        $error->title = "Oppps. Conteudo indisponivel :(";
+        $error->message = "Lamentamos, mas o conteudo que esta a tentar aceder de momento esta indisponivel";
+        $error->linkTitle = "Continue a navegar";
+        $error->link = url_back();
+
+        $head = $this->seo->render(
+            "{$error->code} | {$error->title}",
+            $error->message,
+            url("/ops/{$error->code}"),
+            url("/assets/images/share.jpg"),
+            false
+        );
+
         echo $this->view->render("error", [
-           "title" => $data['errcode'] . " | Oppps"
+           "head" => $head,
+            "error" => $error
         ]);
     }
 }

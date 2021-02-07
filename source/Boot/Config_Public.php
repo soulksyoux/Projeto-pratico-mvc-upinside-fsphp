@@ -16,7 +16,9 @@ define("CONF_URL_ADMIN", CONF_URL_BASE . "/admin");
 /**
  * SITE
  */
-define("CONF_SITE_NAME", "");
+define("CONF_SITE_NAME", "CafeControl");
+define("CONF_SITE_TITLE", "Gerir as suas contas com o melhor café");
+define("CONF_SITE_DESC", "O CafeControl é um gerenciador de contas simples, poderoso e gratuito. O prazer de tomar um café e ter o controle total de suas contas.");
 define("CONF_SITE_LANG", "PT");
 define("CONF_SITE_DOMAIN", "");
 
