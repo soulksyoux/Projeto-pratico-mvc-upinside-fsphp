@@ -4,6 +4,7 @@
 namespace Source\Controllers;
 
 use Source\Core\Controller;
+use Source\Support\Pager;
 
 /**
  * Class Web
@@ -54,6 +55,92 @@ class Web extends Controller {
     }
 
     /**
+     * SITE BLOG
+     */
+    public function blog(?array $data): void {
+        $head = $this->seo->render(
+            "Blog - " . CONF_SITE_NAME,
+            "Navegue pelo nosso blog e tire dicas interessantes para o seu dia a dia",
+            url("/blog"),
+            theme("/assets/images/share.jpg")
+        );
+
+        $pager = new Pager(url("/blog/page/"));
+        $pager->pager(100, 10, ($data['page'] ?? 1));
+
+
+        echo $this->view->render("blog", [
+            "head" => $head,
+            "paginator" => $pager->render()
+        ]);
+    }
+
+    /**
+     * SITE BLOG POST
+     * @param array $data
+     */
+    public function blogPost(array $data): void {
+        $postName = $data['postName'];
+
+        $head = $this->seo->render(
+            "POST NAME - " . CONF_SITE_NAME,
+            "POST HEADLINE",
+            url("/blog/{postName}"),
+            theme("/assets/images/share.jpg")
+        );
+
+        $data = new \stdClass();
+
+        echo $this->view->render("blog-post", [
+            "head" => $head,
+            "postName" => $postName,
+            "data" => $this->seo->data()
+        ]);
+    }
+
+    public function login()
+    {
+        $head = $this->seo->render(
+            "Entrar - " . CONF_SITE_NAME,
+            CONF_SITE_DESC,
+            url("/entrar"),
+            theme("/assets/images/share.jpg")
+        );
+
+        echo $this->view->render("auth-login", [
+            "head" => $head,
+        ]);
+    }
+
+    public function forget()
+    {
+        $head = $this->seo->render(
+            "Recuperar Password - " . CONF_SITE_NAME,
+            CONF_SITE_DESC,
+            url("/recuperar"),
+            theme("/assets/images/share.jpg")
+        );
+
+        echo $this->view->render("auth-forget", [
+            "head" => $head,
+        ]);
+    }
+
+    public function register()
+    {
+        $head = $this->seo->render(
+            "Registar - " . CONF_SITE_NAME,
+            CONF_SITE_DESC,
+            url("/cadastrar"),
+            theme("/assets/images/share.jpg")
+        );
+
+        echo $this->view->render("auth-register", [
+            "head" => $head,
+        ]);
+    }
+
+    /**
      * SITE TERMS
      */
     public function terms(): void {
@@ -68,6 +155,8 @@ class Web extends Controller {
             "head" => $head,
         ]);
     }
+
+
 
     /**
      * SITE NAV ERROR
