@@ -3,6 +3,7 @@
 
 namespace Source\Controllers;
 
+use Source\Core\Connect;
 use Source\Core\Controller;
 use Source\Support\Pager;
 
@@ -17,6 +18,8 @@ class Web extends Controller {
      */
     public function __construct()
     {
+        //redirect("/ops/manutencao");
+        //Connect::getInstance();
         parent::__construct(__DIR__ . "/../../themes/" . CONF_VIEW_THEME . "/");
     }
 
@@ -98,7 +101,10 @@ class Web extends Controller {
         ]);
     }
 
-    public function login()
+    /**
+     * SITE AUTH
+     */
+    public function login(): void
     {
         $head = $this->seo->render(
             "Entrar - " . CONF_SITE_NAME,
@@ -112,7 +118,7 @@ class Web extends Controller {
         ]);
     }
 
-    public function forget()
+    public function forget(): void
     {
         $head = $this->seo->render(
             "Recuperar Password - " . CONF_SITE_NAME,
@@ -126,7 +132,7 @@ class Web extends Controller {
         ]);
     }
 
-    public function register()
+    public function register(): void
     {
         $head = $this->seo->render(
             "Registar - " . CONF_SITE_NAME,
@@ -136,6 +142,37 @@ class Web extends Controller {
         );
 
         echo $this->view->render("auth-register", [
+            "head" => $head,
+        ]);
+    }
+    
+    /**
+     * SITE OPTIN
+     */
+    public function confirm(): void
+    {
+        $head = $this->seo->render(
+            "Confirma seu Registo - " . CONF_SITE_NAME,
+            CONF_SITE_DESC,
+            url("/confirma"),
+            theme("/assets/images/share.jpg")
+        );
+
+        echo $this->view->render("optin-confirm", [
+            "head" => $head,
+        ]);
+    }
+
+    public function success(): void
+    {
+        $head = $this->seo->render(
+            "Bem-vindo(a) ao - " . CONF_SITE_NAME,
+            CONF_SITE_DESC,
+            url("/obrigado"),
+            theme("/assets/images/share.jpg")
+        );
+
+        echo $this->view->render("optin-success", [
             "head" => $head,
         ]);
     }
@@ -164,17 +201,36 @@ class Web extends Controller {
      */
     public function error(array $data): void {
         $error = new \stdClass();
-        $error->code = $data['errcode'];
-        $error->title = "Oppps. Conteudo indisponivel :(";
-        $error->message = "Lamentamos, mas o conteudo que esta a tentar aceder de momento esta indisponivel";
-        $error->linkTitle = "Continue a navegar";
-        $error->link = url_back();
+
+        switch ($data['errcode']) {
+            case "problems":
+                $error->code = "OPS";
+                $error->title = "Estamos a ter alguns problemas...";
+                $error->message = "Lamentamos, mas o nosso serviço não está disponivel neste momento, pf tente mais tarde";
+                $error->linkTitle = "Enviar Email";
+                $error->link = url_back("mailto:" . CONF_MAIL_SUPPORT);
+                break;
+            case "manutencao":
+                $error->code = "OPS";
+                $error->title = "Lamentamos, mas estamos em manutenção";
+                $error->message = "De momento o nosso site esta em manutenção, volte mais tarde pf";
+                $error->linkTitle = null;
+                $error->link = null;
+                break;
+            default:
+                $error->code = $data['errcode'];
+                $error->title = "Oppps. Conteudo indisponivel :(";
+                $error->message = "Lamentamos, mas o conteudo que esta a tentar aceder de momento esta indisponivel";
+                $error->linkTitle = "Continue a navegar";
+                $error->link = url_back();
+                break;
+        }
 
         $head = $this->seo->render(
             "{$error->code} | {$error->title}",
             $error->message,
             url("/ops/{$error->code}"),
-            url("/assets/images/share.jpg"),
+            theme("/assets/images/share.jpg"),
             false
         );
 
