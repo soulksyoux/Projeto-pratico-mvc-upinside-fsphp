@@ -5,8 +5,10 @@ namespace Source\Controllers;
 
 use Source\Core\Connect;
 use Source\Core\Controller;
+use Source\Models\Category;
 use Source\Models\Faq\Channel;
 use Source\Models\Faq\Question;
+use Source\Models\Post;
 use Source\Models\User;
 use Source\Support\Pager;
 
@@ -30,7 +32,10 @@ class Web extends Controller {
      * SITE HOME
      */
     public function home(): void {
-
+        $post = (new Post())->findByUri("1234");
+        $post->uri = "crie-um-instalador-de-estrutura-do-banco-de-dados-para-o-seu-cms-utilizando-php-e-ajax";
+        $post->save();
+        var_dump($post);
         $head = $this->seo->render(
             CONF_SITE_NAME . " - " . CONF_SITE_TITLE,
             CONF_SITE_DESC,
