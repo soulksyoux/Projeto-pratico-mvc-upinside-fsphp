@@ -184,7 +184,7 @@ abstract class Model
      * @param string|null $terms
      * @param string|null $params
      * @param string $columns
-     * @return Model|mixed
+     * @return $this
      */
     public function find(?string $terms = null, ?string $params = null, string $columns = "*")
     {
@@ -198,6 +198,18 @@ abstract class Model
         return $this;
         
     }
+
+    /**
+     * @param int $id
+     * @param string $columns
+     * @return null|mixed|Model
+     */
+    public function findById(int $id, string $columns = "*"): ?Model
+    {
+        $find = $this->find("id = :id", "id={$id}", $columns);
+        return $find->fetch();
+    }
+
 
     /**
      * @param string $columnOrder
