@@ -22,9 +22,12 @@ $route->get("/", "Web:home");
 $route->get("/sobre", "Web:about");
 
 //blog
-$route->get("/blog", "Web:blog");
-$route->get("/blog/page/{page}", "Web:blog");
-$route->get("/blog/{postName}", "Web:blogPost");
+$route->group("/blog");
+$route->get("/", "Web:blog");
+$route->get("/page/{page}", "Web:blog");
+$route->get("/{uri}", "Web:blogPost");
+$route->post("/buscar", "Web:blogSearch");
+$route->post("/buscar/{terms}/{page}", "Web:blogSearch");
 
 //auth
 $route->get("/entrar", "Web:login");

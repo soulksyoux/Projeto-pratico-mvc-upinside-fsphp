@@ -32,10 +32,7 @@ class Web extends Controller {
      * SITE HOME
      */
     public function home(): void {
-        $post = (new Post())->findByUri("1234");
-        $post->uri = "crie-um-instalador-de-estrutura-do-banco-de-dados-para-o-seu-cms-utilizando-php-e-ajax";
-        $post->save();
-        var_dump($post);
+
         $head = $this->seo->render(
             CONF_SITE_NAME . " - " . CONF_SITE_TITLE,
             CONF_SITE_DESC,
@@ -45,7 +42,12 @@ class Web extends Controller {
 
         echo $this->view->render("home", [
             "head" => $head,
-            "video" => "lDZGl9Wdc7Y"
+            "video" => "lDZGl9Wdc7Y",
+            "blog" => (new Post())
+                ->find()
+                ->order("post_at DESC")
+                ->limit(6)
+                ->fetch(true)
         ]);
     }
 
@@ -81,12 +83,14 @@ class Web extends Controller {
             theme("/assets/images/share.jpg")
         );
 
+        $blog = (new Post())->find();
         $pager = new Pager(url("/blog/page/"));
-        $pager->pager(100, 10, ($data['page'] ?? 1));
-
+        $pager->pager($blog->count(), 9, ($data['page'] ?? 1));
 
         echo $this->view->render("blog", [
             "head" => $head,
+            "title" => "Titulo do Blog",
+            "blog" => $blog->limit($pager->limit())->offset($pager->offset())->fetch(true),
             "paginator" => $pager->render()
         ]);
     }
