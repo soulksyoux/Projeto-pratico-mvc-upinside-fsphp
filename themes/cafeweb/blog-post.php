@@ -64,8 +64,6 @@
         </div>
         <?php endif; ?>
 
-        <?php var_dump($more); ?>
-
     </article>
 
 
