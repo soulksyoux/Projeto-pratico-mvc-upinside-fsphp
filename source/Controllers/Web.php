@@ -100,21 +100,34 @@ class Web extends Controller {
      * @param array $data
      */
     public function blogPost(array $data): void {
-        $postName = $data['postName'];
+
+        $data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
+        $post = (new Post())->findByUri($data['uri']);
+        if(!$post) {
+            redirect("/404");
+        }
+
+        $post->views += 1;
+        $post->save();
 
         $head = $this->seo->render(
-            "POST NAME - " . CONF_SITE_NAME,
-            "POST HEADLINE",
-            url("/blog/{postName}"),
-            theme("/assets/images/share.jpg")
+            "{$post->title} - " . CONF_SITE_NAME,
+            $post->subtitle,
+            url("/blog/{$post->uri}"),
+            image($post->cover, 1200, 628)
         );
 
-        $data = new \stdClass();
+
+        $blog = (new Post())
+            ->find("category = :c AND id != :i", "c={$post->category}&i={$post->id}")
+            ->order("rand()")
+            ->limit(3)
+            ->fetch(true);
 
         echo $this->view->render("blog-post", [
             "head" => $head,
-            "postName" => $postName,
-            "data" => $this->seo->data()
+            "post" => $post,
+            "related" => $blog
         ]);
     }
 
