@@ -5,6 +5,8 @@ namespace Source\Controllers;
 
 use Source\Core\Connect;
 use Source\Core\Controller;
+use Source\Core\Session;
+use Source\Models\Auth;
 use Source\Models\Category;
 use Source\Models\Faq\Channel;
 use Source\Models\Faq\Question;
@@ -218,22 +220,55 @@ class Web extends Controller {
     }
 
     /**
-     *
+     * SITE REGISTER
+     * @param null|array $data
      */
-    public function register(): void
+    public function register(?array $data): void
     {
+        if (!empty($data['csrf'])) {
+            if (!csrf_verify($data)) {
+                $json['message'] = $this->message->error("Erro ao enviar, favor use o formulário")->render();
+                echo json_encode($json);
+                return;
+            }
+
+            if (in_array("", $data)) {
+                $json['message'] = $this->message->info("Informe seus dados para criar sua conta.")->render();
+                echo json_encode($json);
+                return;
+            }
+
+            $auth = new Auth();
+            $user = new User();
+            $user->bootstrap(
+                $data["first_name"],
+                $data["last_name"],
+                $data["email"],
+                $data["password"]
+            );
+
+            if ($auth->register($user)) {
+                $json['redirect'] = url("/confirma");
+            } else {
+                $json['message'] = $auth->message()->render();
+            }
+
+            echo json_encode($json);
+            return;
+        }
+
         $head = $this->seo->render(
-            "Registar - " . CONF_SITE_NAME,
+            "Criar Conta - " . CONF_SITE_NAME,
             CONF_SITE_DESC,
             url("/cadastrar"),
             theme("/assets/images/share.jpg")
         );
 
         echo $this->view->render("auth-register", [
-            "head" => $head,
+            "head" => $head
         ]);
     }
-    
+
     /**
      * SITE OPTIN
      */

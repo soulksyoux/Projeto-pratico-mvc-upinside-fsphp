@@ -78,6 +78,8 @@ $(function () {
                 load.fadeIn(200).css("display", "flex");
             },
             success: function (response) {
+                console.log(response);
+
                 //redirect
                 if (response.redirect) {
                     window.location.href = response.redirect;

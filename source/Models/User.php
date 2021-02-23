@@ -94,11 +94,9 @@ class User extends Model
             }
         }
 
-
         /** User Create */
         if (empty($this->id)) {
             if ($this->findByEmail($this->email, "id")) {
-
                 $this->message->warning("O e-mail informado já está cadastrado");
                 return false;
             }

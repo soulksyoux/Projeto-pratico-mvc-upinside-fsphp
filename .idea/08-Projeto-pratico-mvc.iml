@@ -12,11 +12,11 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/rosell-dk/image-mime-type-guesser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/coffeecode/cropper" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/coffeecode/paginator" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/coffeecode/router" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/coffeecode/optimizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/coffeecode/uploader" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/coffeecode/router" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/matthiasmullie/minify" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/matthiasmullie/path-converter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/matthiasmullie/minify" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

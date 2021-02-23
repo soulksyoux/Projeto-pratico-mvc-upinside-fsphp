@@ -21,6 +21,12 @@ define("CONF_SITE_TITLE", "Gerir as suas contas com o melhor café");
 define("CONF_SITE_DESC", "O CafeControl é um gerenciador de contas simples, poderoso e gratuito. O prazer de tomar um café e ter o controle total de suas contas.");
 define("CONF_SITE_LANG", "PT");
 define("CONF_SITE_DOMAIN", "");
+define("CONF_SITE_ADDR_STREET", "Rua do Ouro");
+define("CONF_SITE_ADDR_NUMBER", "22");
+define("CONF_SITE_ADDR_COMPLEX", "7");
+define("CONF_SITE_ADDR_CITY", "Gaia");
+define("CONF_SITE_ADDR_STATE", "Porto");
+define("CONF_SITE_ADDR_ZIPCODE", "4000");
 
 /**
  * SOCIAL

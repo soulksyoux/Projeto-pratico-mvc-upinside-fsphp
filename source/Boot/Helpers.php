@@ -16,6 +16,19 @@ function is_email(string $email): bool
 }
 
 /**
+ * @param string $password
+ * @return bool
+ */
+function is_passwd(string $password): bool
+{
+    if (password_get_info($password)['algo'] || (mb_strlen($password) >= CONF_PASSWD_MIN_LEN && mb_strlen($password) <= CONF_PASSWD_MAX_LEN )) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * ##################
  * ###   STRING   ###
  * ##################
@@ -120,12 +133,10 @@ function str_limit_chars(string $string, int $limit, string $pointer = "..."): s
  */
 function url(string $path = null): string
 {
-
     if(strpos($_SERVER['HTTP_HOST'], "localhost") !== false){
         if($path) {
             return CONF_URL_TEST . "/" . ($path[0] == "/" ? mb_substr($path, 1) : $path);
         }
-
         return CONF_URL_TEST;
 
     }
@@ -174,6 +185,7 @@ function redirect(string $url): void
  * @return string
  */
 function theme(string $path = null): string {
+
     if(strpos($_SERVER['HTTP_HOST'], "localhost") !== false){
         if($path) {
             return CONF_URL_TEST . "/themes/" . CONF_VIEW_THEME . "/" . ($path[0] == "/" ? mb_substr($path, 1) : $path);
@@ -256,18 +268,6 @@ function passwd(string $password): string
     return password_hash($password, CONF_PASSWD_ALGO, CONF_PASSWD_OPTION);
 }
 
-/**
- * @param string $password
- * @return bool
- */
-function is_passwd(string $password): bool
-{
-    if (password_get_info($password)['algo'] && mb_strlen($password) >= CONF_PASSWD_MIN_LEN && mb_strlen($password) <= CONF_PASSWD_MAX_LEN ) {
-        return true;
-    }
-
-    return false;
-}
 
 /**
  * @param string $password
