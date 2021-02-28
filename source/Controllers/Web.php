@@ -281,25 +281,47 @@ class Web extends Controller {
             theme("/assets/images/share.jpg")
         );
 
-        echo $this->view->render("optin-confirm", [
+        $data = new \stdClass();
+        $data->title = "Confirme seu cadastro.";
+        $data->image = theme("/assets/images/optin-confirm.jpg");
+        $data->desc = "Enviamos um link de confirmação para seu e-mail. Acesse e siga as instruções para concluir seu cadastro e comece a controlar com o CaféControl";
+
+        echo $this->view->render("optin", [
             "head" => $head,
+            "data" => $data
         ]);
     }
 
     /**
+     * @param array $data
      *
      */
-    public function success(): void
+    public function success($data): void
     {
+        $email = base64_decode($data["email"]);
+        $user = (new User())->findByEmail($email);
+        if($user && $user->status != "confirmed") {
+            $user->status = "confirmed";
+            $user->save();
+        }
+
+        $data = new \stdClass();
+        $data->title = "Tudo pronto. Você já pode controlar :)";
+        $data->image = theme("/assets/images/optin-success.jpg");
+        $data->desc = "Bem-vindo(a) ao seu controle de contas, vamos tomar um café?";
+        $data->link = url("/entrar");
+        $data->linkTitle = "Fazer Login";
+
         $head = $this->seo->render(
             "Bem-vindo(a) ao - " . CONF_SITE_NAME,
             CONF_SITE_DESC,
             url("/obrigado"),
-            theme("/assets/images/share.jpg")
+            theme("/assets/images/share.jpg"),
         );
 
-        echo $this->view->render("optin-success", [
+        echo $this->view->render("optin", [
             "head" => $head,
+            "data" => $data
         ]);
     }
 
