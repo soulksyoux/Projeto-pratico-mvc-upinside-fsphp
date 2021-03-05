@@ -8,7 +8,7 @@
         </header>
 
         <form class="auth_form" action="<?= url("/cadastrar"); ?>" method="post" enctype="multipart/form-data">
-
+            <div class="ajax_response"><?= flash(); ?></div>
             <?= csrf_input(); ?>
 
             <label>

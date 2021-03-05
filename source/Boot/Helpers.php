@@ -311,6 +311,7 @@ function csrf_input(): string
 function csrf_verify($request): bool
 {
     $session = new \Source\Core\Session();
+
     if (empty($session->csrf_token) || empty($request['csrf']) || $request['csrf'] != $session->csrf_token) {
         return false;
     }

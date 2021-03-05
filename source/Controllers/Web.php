@@ -188,8 +188,41 @@ class Web extends Controller {
     /**
      * SITE AUTH
      */
-    public function login(): void
+
+
+    public function login(?array $data): void
     {
+        //se for true sifnifica que vem um post e que o user submeteu o form de login
+        if(!empty($data["csrf"])) {
+
+
+            if(!csrf_verify($data)) {
+                $json["message"] = $this->message->error("Erro ao enviar, por favor use o formulário.")->render();
+                echo json_encode($json);
+                return;
+            }
+
+            if(empty($data["email"]) || empty($data["password"])) {
+                $json["message"] = $this->message->warning("Informe o seu email e senha por favor.")->render();
+                echo json_encode($json);
+                return;
+            }
+
+            $save = (!empty($data["save"]) ? true : false);
+            $auth = new Auth();
+            $login = $auth->login($data["email"], $data["password"], $save);
+
+            if($login) {
+                $json["redirect"] = url("/app");
+            }else{
+                $json["message"] = $auth->message()->render();
+            }
+
+            echo json_encode($json);
+            return;
+
+        }
+
         $head = $this->seo->render(
             "Entrar - " . CONF_SITE_NAME,
             CONF_SITE_DESC,
@@ -199,6 +232,7 @@ class Web extends Controller {
 
         echo $this->view->render("auth-login", [
             "head" => $head,
+            "cookie" => filter_input(INPUT_COOKIE, "authEmail")
         ]);
     }
 
@@ -299,7 +333,19 @@ class Web extends Controller {
     public function success($data): void
     {
         $email = base64_decode($data["email"]);
+
+        if(!is_email($email)) {
+            $this->message->info("Código informado não é valido!")->flash();
+            redirect("/cadastrar");
+        }
+
         $user = (new User())->findByEmail($email);
+
+        if (!$user || $email != $user->email) {
+            $this->message->info("Cadastre-se para ativar a sua conta :)")->flash();
+            redirect("/cadastrar");
+        }
+
         if($user && $user->status != "confirmed") {
             $user->status = "confirmed";
             $user->save();
