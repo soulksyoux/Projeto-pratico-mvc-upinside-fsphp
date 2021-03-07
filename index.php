@@ -36,6 +36,10 @@ $route->post("/entrar", "Web:login");
 $route->get("/cadastrar", "Web:register");
 $route->post("/cadastrar", "Web:register");
 $route->get("/recuperar", "Web:forget");
+$route->post("/recuperar", "Web:forget");
+$route->get("/recuperar/{code}", "Web:reset");
+$route->post("/recuperar/reset", "Web:reset");
+
 
 //app
 $route->group("/app");

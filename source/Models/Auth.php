@@ -8,6 +8,7 @@ use Source\Core\Model;
 use Source\Core\Session;
 use Source\Core\View;
 use Source\Support\Email;
+use Source\Support\Message;
 
 /**
  * Class Auth
@@ -121,6 +122,82 @@ class Auth extends Model
 
 
         return true;
+    }
+
+
+    /**
+     * @param string $email
+     * @return bool
+     */
+    public function forget(string $email): bool {
+        $user = (new User())->findByEmail($email);
+
+        if(empty($user)){
+            $this->message()->warning("Email nao registado");
+            return false;
+        }
+
+        $user->forget = md5(uniqid(rand(), true));
+        $user->save();
+
+        $view = new View(__DIR__ . "/../../shared/views/email");
+        $message = $view->render("forget", [
+            "first_name" => $user->first_name,
+            "forget_link" => url("/recuperar/{$user->email}|{$user->forget}")
+        ]);
+
+        (new Email())->bootstrap(
+            "Recuperar senha no " . CONF_SITE_NAME,
+            $message,
+            $user->email,
+            "{$user->first_name} {$user->last_name}"
+        )->send();
+
+        return true;
+
+    }
+
+
+    /**
+     * @param string $email
+     * @param string $code
+     * @param string $password
+     * @param string $passwordRe
+     * @return bool
+     */
+    public function reset(string $email, string $code, string $password, string $passwordRe): bool
+    {
+
+        $user = (new User())->findByEmail($email);
+        if(!$user) {
+            $this->message->warning("Conta para recuperacao nao encontrada.");
+            return false;
+        }
+
+        if($user->forget != $code) {
+            $this->message->error("Codigo de verificação invalido");
+            return false;
+        }
+
+        if(!is_passwd($password)) {
+            $min = CONF_PASSWD_MIN_LEN;
+            $max = CONF_PASSWD_MAX_LEN;
+            $this->message->warning("Password tem de ter mais de {$min} e menos de {$max} caracteres");
+            return false;
+        }
+
+        if($password != $passwordRe) {
+            $this->message->warning("Password de confirmaçao é invalida");
+            return false;
+        }
+
+        $user->password = $password;
+        $user->forget = null;
+        $user->save();
+
+        return true;
+
+
     }
 
 }
