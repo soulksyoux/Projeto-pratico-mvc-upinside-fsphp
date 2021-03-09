@@ -132,6 +132,7 @@ abstract class Model
             return Connect::getInstance()->lastInsertId();
         } catch (\PDOException $exception) {
             $this->fail = $exception;
+
             return null;
         }
     }
