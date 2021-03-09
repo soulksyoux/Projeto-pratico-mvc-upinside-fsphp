@@ -12,6 +12,7 @@ use Source\Models\Faq\Channel;
 use Source\Models\Faq\Question;
 use Source\Models\Post;
 use Source\Models\User;
+use Source\Support\Email;
 use Source\Support\Pager;
 
 /**
@@ -28,6 +29,16 @@ class Web extends Controller {
         //redirect("/ops/manutencao");
         //Connect::getInstance();
         parent::__construct(__DIR__ . "/../../themes/" . CONF_VIEW_THEME . "/");
+
+        $email = new Email();
+        $email->bootstrap(
+            "Teste de fila de email " .time(),
+            "Este é apenas um teste de envio de email",
+            "andytod80@gmail.com",
+            "Andy Garcia"
+        )->sendQueue();
+
+
     }
 
     /**
@@ -125,7 +136,7 @@ class Web extends Controller {
             theme("/assets/images/share.jpg")
         );
 
-        $blogSearch = (new Post())->find("title LIKE :s OR subtitle LIKE :s", "s=%{$search}%");
+        $blogSearch = (new Post())->find("MATCH(title, subtitle) AGAINST(:s)", "s={$search}");
 
         if(!$blogSearch->count()){
             echo $this->view->render("blog", [
@@ -148,6 +159,48 @@ class Web extends Controller {
         ]);
 
     }
+
+
+    /**
+     * SITE BLOG CATEGORY SEARCH
+     * @param array $data
+     */
+    public function blogCategory(array $data): void
+    {
+        $categoryUri = filter_var($data["category"], FILTER_SANITIZE_STRIPPED);
+        $category = (new Category())->findByUri($categoryUri);
+        if(!$category) {
+            redirect("/blog");
+        }
+
+        $blogCategory = (new Post())->find("category = :c", "c={$category->id}");
+
+
+        $page = (!empty($data["page"]) && filter_var($data["page"], FILTER_VALIDATE_INT) >= 1 ? $data["page"] : 1);
+        $pager = new Pager(url("/blog/categoria/{$category->uri}/"));
+        $pager->pager($blogCategory->count(), 9, $page);
+
+        $head = $this->seo->render(
+            "Artigos em {$category->title} - " . CONF_SITE_NAME,
+            $category->description,
+            url("/blog/categoria/{$category->uri}/{$page}"),
+            ($category->cover ? image($category->cover, 1200, 628) : theme("/assets/images/share.jpg"))
+        );
+
+        echo $this->view->render("blog", [
+            "head" => $head,
+            "title" => "Artigos em {$category->title}",
+            "desc" => $category->description,
+            "blog" => $blogCategory
+                ->limit($pager->limit())
+                ->offset($pager->offset())
+                ->order("post_at DESC")
+                ->fetch(true),
+            "paginator" => $pager->render()
+        ]);
+
+    }
+
 
     /**
      * SITE BLOG POST

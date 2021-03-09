@@ -28,6 +28,8 @@ $route->get("/page/{page}", "Web:blog");
 $route->get("/{uri}", "Web:blogPost");
 $route->post("/buscar", "Web:blogSearch");
 $route->get("/buscar/{terms}/{page}", "Web:blogSearch");
+$route->get("/categoria/{category}", "Web:blogCategory");
+$route->get("/categoria/{category}/{page}", "Web:blogCategory");
 
 //auth
 $route->group(null);

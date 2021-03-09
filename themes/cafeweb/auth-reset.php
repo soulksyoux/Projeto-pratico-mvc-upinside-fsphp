@@ -9,7 +9,7 @@
 
         <form class="auth_form" action="<?= url("/recuperar/reset") ?>" method="post" enctype="multipart/form-data">
             <div class="ajax_response"><?= flash(); ?></div>
-            <input type="text" name="code" value="<?= $code; ?>">
+            <input type="text" name="code" hidden value="<?= $code; ?>">
             <?= csrf_input(); ?>
 
             <label>
