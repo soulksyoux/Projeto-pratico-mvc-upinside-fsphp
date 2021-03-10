@@ -12,6 +12,7 @@ use Source\Models\Faq\Channel;
 use Source\Models\Faq\Question;
 use Source\Models\Post;
 use Source\Models\Report\Access;
+use Source\Models\Report\Online;
 use Source\Models\User;
 use Source\Support\Email;
 use Source\Support\Pager;
@@ -42,6 +43,15 @@ class Web extends Controller {
         */
 
         (new Access())->report();
+        (new Online())->report();
+
+        $online = new Online();
+        var_dump($online->findByActive(true), $online->findByActive());
+        var_dump($_SESSION);
+
+        parse_str("tree=um&semente=dois", $arr);
+        var_dump($arr);
+
 
     }
 

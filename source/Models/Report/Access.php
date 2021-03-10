@@ -6,13 +6,23 @@ use Source\Core\Model;
 use Source\Core\Session;
 
 
+/**
+ * Class Access
+ * @package Source\Models\Report
+ */
 class Access extends Model
 {
+    /**
+     * Access constructor.
+     */
     public function __construct()
     {
         parent::__construct("report_access", ["id"], ["users", "views", "pages"]);
     }
 
+    /**
+     * @return $this
+     */
     public function report(): Access
     {
         $find = $this->find("DATE(created_at) = DATE(now())")->fetch();
@@ -27,6 +37,7 @@ class Access extends Model
             $session->set("access", true);
 
             $this->save();
+            return $this;
         }
 
         if(!filter_input(INPUT_COOKIE, "access")){
@@ -46,6 +57,9 @@ class Access extends Model
         
     }
 
+    /**
+     * @return bool
+     */
     public function save(): bool
     {
         /** Update Access */

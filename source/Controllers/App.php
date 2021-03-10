@@ -19,6 +19,9 @@ class App extends Controller
             (new Message())->warning("Utilizador tem de estar logado para poder aceder a APP")->flash();
             redirect("/entrar");
         }
+
+        (new Access())->report();
+        (new Online())->report();
     }
 
     public function home() {
