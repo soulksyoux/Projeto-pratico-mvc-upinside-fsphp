@@ -45,13 +45,8 @@ class Web extends Controller {
         (new Access())->report();
         (new Online())->report();
 
-        $online = new Online();
-        var_dump($online->findByActive(true), $online->findByActive());
-        var_dump($_SESSION);
-
-        parse_str("tree=um&semente=dois", $arr);
-        var_dump($arr);
-
+        //$online = new Online();
+        //var_dump($online->findByActive(true), $online->findByActive());
 
     }
 
@@ -265,6 +260,13 @@ class Web extends Controller {
 
             if(!csrf_verify($data)) {
                 $json["message"] = $this->message->error("Erro ao enviar, por favor use o formulário.")->render();
+                echo json_encode($json);
+                return;
+            }
+
+            if(request_limit("weblogintest", 3, 60 )) {
+
+                $json["message"] = $this->message->error("Excedeu o numero de tentativas de login... Aguarde 60 sec.")->render();
                 echo json_encode($json);
                 return;
             }

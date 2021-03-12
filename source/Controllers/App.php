@@ -20,8 +20,8 @@ class App extends Controller
             redirect("/entrar");
         }
 
-        (new Access())->report();
-        (new Online())->report();
+        //(new Access())->report();
+        //(new Online())->report();
     }
 
     public function home() {
