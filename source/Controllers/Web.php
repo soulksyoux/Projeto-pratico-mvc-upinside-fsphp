@@ -324,6 +324,12 @@ class Web extends Controller {
                 return;
             }
 
+            if(request_repeat("webforget", $data["email"])) {
+                $json["message"] = $this->message->error("Voce já tentou este email antes...")->render();
+                echo json_encode($json);
+                return;
+            }
+
             $auth = new Auth();
             if($auth->forget($data["email"])) {
                 $json["message"] = $this->message->success("Acesse o seu email para completar...")->render();
@@ -388,9 +394,7 @@ class Web extends Controller {
 
             echo json_encode($json);
             return;
-
         }
-
 
 
         $head = $this->seo->render(
