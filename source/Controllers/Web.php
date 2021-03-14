@@ -254,6 +254,9 @@ class Web extends Controller {
 
     public function login(?array $data): void
     {
+        if(Auth::user()) {
+            redirect("/app");
+        }
         //se for true sifnifica que vem um post e que o user submeteu o form de login
         if(!empty($data["csrf"])) {
 
@@ -311,6 +314,9 @@ class Web extends Controller {
      */
     public function forget(array $data): void
     {
+        if(Auth::user()) {
+            redirect("/app");
+        }
         if (!empty($data['csrf'])) {
             if (!csrf_verify($data)) {
                 $json['message'] = $this->message->error("Erro ao enviar, favor use o formulário")->render();
@@ -360,6 +366,10 @@ class Web extends Controller {
      * @param array $data
      */
     public function reset(array $data): void {
+
+        if(Auth::user()) {
+            redirect("/app");
+        }
 
         if (!empty($data['csrf'])) {
             if (!csrf_verify($data)) {
@@ -417,6 +427,10 @@ class Web extends Controller {
      */
     public function register(?array $data): void
     {
+        if(Auth::user()) {
+            redirect("/app");
+        }
+
         if (!empty($data['csrf'])) {
             if (!csrf_verify($data)) {
                 $json['message'] = $this->message->error("Erro ao enviar, favor use o formulário")->render();
@@ -466,6 +480,10 @@ class Web extends Controller {
      */
     public function confirm(): void
     {
+        if(Auth::user()) {
+            redirect("/app");
+        }
+
         $head = $this->seo->render(
             "Confirma seu Registo - " . CONF_SITE_NAME,
             CONF_SITE_DESC,
@@ -490,6 +508,10 @@ class Web extends Controller {
      */
     public function success($data): void
     {
+        if(Auth::user()) {
+            redirect("/app");
+        }
+
         $email = base64_decode($data["email"]);
 
         if(!is_email($email)) {
