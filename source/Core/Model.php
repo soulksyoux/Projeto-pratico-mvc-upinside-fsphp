@@ -164,6 +164,38 @@ abstract class Model
 
 
     /**
+     * @return bool
+     */
+    public function save(): bool
+    {
+        /** Update Access */
+        if(!empty($this->id)) {
+
+            $id = $this->id;
+            $this->update($this->safe(), "id = :id", "id={$accessId}");
+            if($this->fail()) {
+                $this->message->error("Erro ao atualizar, verifique os dados...");
+                return false;
+            }
+        }
+
+        /** Create Access */
+        if(empty($this->id)) {
+
+            $id = $this->create($this->safe());
+
+            if($this->fail()) {
+                $this->message->error("Erro ao criar registo, tente novamente...");
+                return false;
+            }
+        }
+
+        $this->data = $this->findById($id)->data();
+        return true;
+    }
+
+
+    /**
      * @param string $terms
      * @param string|null $params
      * @return bool

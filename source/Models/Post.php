@@ -77,29 +77,5 @@ class Post extends Model
         return null;
     }
 
-    /**
-     * @return bool
-     */
-    public function save(): bool
-    {
-        /** Post update */
-        if(!empty($this->id)) {
-            $postId = $this->id;
 
-            $this->update($this->safe(), "id = :id", "id={$postId}");
-            if($this->fail()) {
-                $this->message()->error("Erro ao atualizar registo.");
-                return false;
-            }
-
-            //return true;
-        }
-
-        /** Post create */
-
-
-        $this->data = $this->findById($postId)->data();
-        return true;
-
-    }
 }

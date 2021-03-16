@@ -95,35 +95,6 @@ class Online extends Model
     }
 
 
-    /**
-     * @return bool
-     */
-    public function save(): bool
-    {
-        /** Update Access */
-        if(!empty($this->id)) {
 
-            $onlineId = $this->id;
-            $this->update($this->safe(), "id = :id", "id={$onlineId}");
-            if($this->fail()) {
-                $this->message->error("Erro ao atualizar, verifique os dados...");
-                return false;
-            }
-        }
-
-        /** Create Access */
-        if(empty($this->id)) {
-
-            $onlineId = $this->create($this->safe());
-
-            if($this->fail()) {
-                $this->message->error("Erro ao criar registo, tente novamente...");
-                return false;
-            }
-        }
-
-        $this->data = $this->findById($onlineId)->data();
-        return true;
-    }
 
 }

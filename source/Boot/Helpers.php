@@ -85,6 +85,16 @@ function str_title(string $string): string
 }
 
 /**
+ * @param string $text
+ * @return string
+ */
+function str_textarea(string $text): string {
+    $text = filter_var($text, FILTER_SANITIZE_STRIPPED);
+    $arrayReplace = ["&#10;", "&#10;&#10;", "&#10;&#10;&#10;&#10;&#10;", "&#10;&#10;&#10;&#10;&#10;&#10;"];
+    return "<p>" . str_replace($arrayReplace, "</p><p>", $text) . "</p>";
+}
+
+/**
  * @param string $string
  * @param int $limit
  * @param string $pointer
@@ -175,10 +185,25 @@ function redirect(string $url): void
 }
 
 /**
+ * @param string $price
+ * @return string
+ */
+function str_price(string $price): string {
+    return number_format($price, "2", ",", ".");
+}
+
+/**
  * ##################
  * ###   ASSETS   ###
  * ##################
  */
+
+/**
+ * @return \Source\Models\User|null
+ */
+function  user(): ?\Source\Models\User {
+    return \Source\Models\Auth::user();
+}
 
 /**
  * @param string|null $path
@@ -377,3 +402,4 @@ function request_repeat(string $field, string $value): bool {
     $session->set($field, $value);
     return false;
 }
+

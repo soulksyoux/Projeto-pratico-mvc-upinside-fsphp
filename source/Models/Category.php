@@ -31,11 +31,5 @@ class Category extends Model
         return $find->fetch();
     }
 
-    /**
-     * @return bool
-     */
-    public function save(): bool
-    {
 
-    }
 }
