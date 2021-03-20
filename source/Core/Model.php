@@ -172,7 +172,7 @@ abstract class Model
         if(!empty($this->id)) {
 
             $id = $this->id;
-            $this->update($this->safe(), "id = :id", "id={$accessId}");
+            $this->update($this->safe(), "id = :id", "id={$id}");
             if($this->fail()) {
                 $this->message->error("Erro ao atualizar, verifique os dados...");
                 return false;
@@ -240,6 +240,7 @@ abstract class Model
      */
     public function find(?string $terms = null, ?string $params = null, string $columns = "*")
     {
+
         if($terms){
             $this->query = "SELECT {$columns} FROM " . static::$entity . " WHERE {$terms}";
             parse_str($params, $this->params);
