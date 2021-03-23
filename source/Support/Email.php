@@ -82,6 +82,8 @@ class Email
      */
     public function send($from = CONF_MAIL_SENDER['address'], $fromName = CONF_MAIL_SENDER["name"]): bool
     {
+
+
         if (empty($this->data)) {
             $this->message->error("Erro ao enviar, favor verifique os dados");
             return false;
@@ -112,6 +114,7 @@ class Email
             $this->mail->send();
             return true;
         } catch (Exception $exception) {
+
             $this->message->error($exception->getMessage());
             return false;
         }
