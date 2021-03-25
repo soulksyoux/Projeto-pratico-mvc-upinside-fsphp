@@ -5,6 +5,7 @@ namespace Source\Controllers;
 use Source\Core\Controller;
 use Source\Core\View;
 use Source\Models\Auth;
+use Source\Models\CafeApp\AppCategory;
 use Source\Models\CafeApp\AppInvoice;
 use Source\Models\Post;
 use Source\Models\Report\Access;
@@ -36,6 +37,8 @@ class App extends Controller
 
         (new Access())->report();
         (new Online())->report();
+
+        (new AppInvoice())->fixed($this->user, 3);
     }
 
     /**
@@ -151,11 +154,13 @@ class App extends Controller
 
     }
 
+
     /**
-     * APP INCOME (Receber)
+     * @param array|null $data
      */
-    public function income()
+    public function income(?array $data): void
     {
+
         $head = $this->seo->render(
             "Minhas receitas - " . CONF_SITE_NAME,
             CONF_SITE_DESC,
@@ -164,15 +169,35 @@ class App extends Controller
             false
         );
 
-        echo $this->view->render("income", [
-            "head" => $head
+        //ir buscar todas as categorias do tipo income
+        $categories = (new AppCategory())->find("type = :type", "type=income", "id, name")
+            ->order("order_by, name")
+            ->fetch(true);
+
+
+        //ir buscar todas as invoices do type income
+        $invoices = (new AppInvoice())->find("type = 'income' AND status = 'paid'")->fetch(true);
+
+        echo $this->view->render("invoices", [
+            "user" => $this->user,
+            "head" => $head,
+            "type" => "income",
+            "categories" => $categories,
+            "invoices" => (new AppInvoice())->filter($this->user, "income", $data ?? null),
+            "filter" => (object)[
+                "status" => ($data["status"] ?? null),
+                "category" => ($data["category"] ?? null),
+                "date" => (!empty($data["date"]) ? str_replace("-", "/", $data["date"]) : null),
+
+            ]
         ]);
     }
 
+
     /**
-     * APP EXPENSE (Pagar)
+     * @param array|null $data
      */
-    public function expense()
+    public function expense(?array $data): void
     {
         $head = $this->seo->render(
             "Minhas despesas - " . CONF_SITE_NAME,
@@ -182,10 +207,39 @@ class App extends Controller
             false
         );
 
-        echo $this->view->render("expense", [
-            "head" => $head
+        //ir buscar todas as categorias do tipo income
+        $categories = (new AppCategory())->find("type = :type", "type=expense", "id, name")
+            ->order("order_by, name")
+            ->fetch(true);
+
+
+        //ir buscar todas as invoices do type income
+        $invoices = (new AppInvoice())->find("type = 'expense' AND status = 'paid'")->fetch(true);
+
+        echo $this->view->render("invoices", [
+            "user" => $this->user,
+            "head" => $head,
+            "type" => "expense",
+            "categories" => $categories,
+            "invoices" => (new AppInvoice())->filter($this->user, "expense", $data ?? null),
+            "filter" => (object)[
+                "status" => ($data["status"] ?? null),
+                "category" => ($data["category"] ?? null),
+                "date" => (!empty($data["date"]) ? str_replace("-", "/", $data["date"]) : null),
+
+            ]
         ]);
     }
+
+
+    /**
+     * @param array $data
+     */
+    public function filter(array $data): void
+    {
+        var_dump($data);
+    }
+
 
     /**
      * APP INVOICE (Fatura)
@@ -205,6 +259,9 @@ class App extends Controller
         ]);
     }
 
+    /**
+     * @param array $data
+     */
     public function launch(array $data):void {
         if(request_limit("applaunch", 25, 60 * 5)) {
             $json["message"] = $this->message->warning("Foi muito rápido " . $this->user->first_name)->render();
@@ -266,6 +323,9 @@ class App extends Controller
 
     }
 
+    /**
+     * @param array $data
+     */
     public function support(array $data): void {
 
         if(empty($data)) {
